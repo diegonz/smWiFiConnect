@@ -34,7 +34,7 @@ function sendAPlistPage(conn)
   end
   
   conn:send('</table>\n\nSSID: <input type="text" id="ssid" name="ssid" value=""><br/>\nPassword: <input type="text" name="passwd" value=""><br/>\n\n')
-  conn:send('<input type="submit" value="Submit"/>\n<input type="button" onClick="window.location.reload()" value="Refresh"/>\n<br/>If you\'re happy with this...\n<input type="submit" name="reboot" value="Conectar"/>\n')
+  conn:send('<input type="submit" value="Submit"/>\n<input type="button" onClick="window.location.reload()" value="Refresh"/>\n<br/>\n<input type="submit" name="reboot" value="Conectar"/>\n')
   conn:send('</form>\n</body></html>')
   
 end
@@ -82,7 +82,7 @@ function incomingConnection(conn, payload)
   end
 end
 
-tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- actualizamos la lista de redes en base al refreshTimeout
+-- tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- actualizamos la lista de redes en base al refreshTimeout
 getAPs() -- forzamos la carga de la lista de redes la primera vez
   
 srv=net.createServer(net.TCP) -- arrancamos el servidor web

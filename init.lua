@@ -18,15 +18,17 @@ function netStatus()
 end
 
 function smartideaApp()
+  ip = wifi.sta.getip()
+  print('Conectado correctamente a la red WiFi con IP: ' .. ip)
   doCleanup()
-  local smApp = 'smDimmer.lua'
-  local smFile=file.open(smApp, 'r')
-  if(smFile == nil) then -- no se encuentra el fichero
-    print('Error al acceder al archivo la SMARTIDEA App: ' .. smApp)
-    return
-  end
-  smFile.close()
-  dofile(smApp)
+  --local smApp = 'smDimmer.lua'
+  --local smFile=file.open(smApp, 'r')
+  --if(smFile == nil) then -- no se encuentra el fichero
+  --  print('Error al acceder al archivo la SMARTIDEA App: ' .. smApp)
+  --  return
+  --end
+  --smFile.close()
+  dofile('smDimmer.lua')
 end
 
 function confConnection()
@@ -46,6 +48,7 @@ function doCleanup()
   netStatus = nil
   smartideaApp = nil
   confConnection = nil
+  ip = nil
   doCleanup = nil
   -- llamamos al recolector de basura
   collectgarbage()
