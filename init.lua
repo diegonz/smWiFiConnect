@@ -1,18 +1,21 @@
-conTimeout = 30 -- timeout antes de cambiar a modo AP
+conTimeout = 10 -- timeout antes de cambiar a modo AP
 
 timeoutCount = 0
 function netStatus()
   timeoutCount = timeoutCount + 1
   local s=wifi.sta.status()
   if(s==5) then -- conectado, lanzamos la smApp
+	print('Conectado correctamente - (status 5)')
     smartideaApp()
     return
   elseif(s==2 or s==3 or s==4) then -- conexion fallida, cambiamos a modo AP
-    confConnection()
+	print('Fallo al conectar - (status 2/3/4)')
+    confConn()
     return
   end
   if(timeoutCount >= conTimeout) then -- agotado el tiempo cambiamos a modo AP
-    confConnection()
+	print('Timeout al conectar!')
+    confConn()
     return
   end
 end
@@ -21,20 +24,13 @@ function smartideaApp()
   ip = wifi.sta.getip()
   print('Conectado correctamente a la red WiFi con IP: ' .. ip)
   doCleanup()
-  --local smApp = 'smDimmer.lua'
-  --local smFile=file.open(smApp, 'r')
-  --if(smFile == nil) then -- no se encuentra el fichero
-  --  print('Error al acceder al archivo la SMARTIDEA App: ' .. smApp)
-  --  return
-  --end
-  --smFile.close()
   dofile('smDimmer.lua')
 end
 
-function confConnection()
-  lastStatus = statuses[wifi.sta.status()]
+function confConn()
+  print('Red WiFi no conectada/encontrada, lanzando modo AP ')
   doCleanup()
-  dofile('smConfCon.lua') -- red no encontrada, cambiando a modo AP
+  dofile('smConfConn.lua') -- red no conectada/encontrada, cambiando a modo AP
 end
 
 function doCleanup()
@@ -42,12 +38,11 @@ function doCleanup()
   tmr.stop(0)
   -- reseteamos con nil las variables globales
   conTimeout = nil
-  statuses = nil
   timeoutCount = nil
   -- reseteamos con nil las funciones definidas
   netStatus = nil
   smartideaApp = nil
-  confConnection = nil
+  confConn = nil
   ip = nil
   doCleanup = nil
   -- llamamos al recolector de basura

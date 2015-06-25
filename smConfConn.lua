@@ -1,6 +1,6 @@
 dofile("smAPConfData.lua")
 
-refreshTimeout = 15 -- timeout de escaneo de redes disponibles
+refreshTimeout = 10 -- timeout de escaneo de redes disponibles
 availableAPs = {}
 newssid = ""
 
@@ -12,16 +12,18 @@ function getAPs_callback(t)
 end
 
 function getAPs()
+  print ("Buscando APs...")
   wifi.sta.getap(getAPs_callback)
 end
 
 function sendAPlistPage(conn)
+  print ("\n\nEnviando web de configuracion!")
   conn:send('HTTP/1.1 200 OK\n\n')
   conn:send('<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>SMARTIDEA - Conectar a una red WiFi</title></head>\n<body>\n<form action="/" method="POST">\n')
 
-  if(lastStatus ~= nil) then
-    conn:send('<br/>Estado anterior de la red: ' .. lastStatus ..'\n')
-  end
+  --if(lastStatus ~= nil) then
+  --  conn:send('<br/>Estado anterior de la red: ' .. lastStatus ..'\n')
+  --end
   
   if(newssid ~= "") then
     conn:send('<br/>Tras reiniciar, conectar al SSID "' .. newssid ..'".\n')
@@ -48,6 +50,7 @@ function url_decode(str)
 end
 
 function incomingConnection(conn, payload)
+  print ("\n\nConexion HTTP recibida!")
   if (string.find(payload, "GET /favicon.ico HTTP/1.1") ~= nil) then
     print("GET favicon request")
   elseif (string.find(payload, "GET / HTTP/1.1") ~= nil) then
