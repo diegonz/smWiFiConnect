@@ -6,6 +6,7 @@
 .idea
 out
 gen
+*.iml
 
 ### Lua template
 # Compiled Lua sources
