@@ -33,7 +33,6 @@ function sendAPlistPage(conn)
     conn:send('</table>\n\nSSID: <input type="text" id="ssid" name="ssid" value=""><br/>\nPassword: <input type="text" name="passwd" value=""><br/>\n\n')
     conn:send('<input type="submit" value="Submit"/>\n<input type="button" onClick="window.location.reload()" value="Refresh"/>\n<br/>\n<input type="submit" name="reboot" value="Conectar"/>\n')
     conn:send('</form>\n</body></html>')
-    conn:close()
 end
 
 function url_decode(str)
