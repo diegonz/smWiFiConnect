@@ -2,7 +2,7 @@
 dofile("smAPConfData.lua")
 
 -- Timeout de escaneo de redes disponibles
-refreshTimeout = 60
+refreshTimeout = 15
 availableAPs = {}
 newssid = ""
 
@@ -10,6 +10,7 @@ function getAPs_callback(t)
     if(t==nil) then
         return
     end
+    availableAPs = nil
     availableAPs = t
 end
 
@@ -21,10 +22,10 @@ end
 function sendAPlistPage(conn)
     print ("\n\nEnviando web de configuracion!") --DEBUG
     conn:send('HTTP/1.1 200 OK\n\n')
-    conn:send('<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>SMARTIDEA - Conectar a una red WiFi</title></head>\n<body>\n<form action="/" method="POST">\n')
-    if(newssid ~= "") then
-        conn:send('<br/>Tras reiniciar, conectar al SSID "' .. newssid ..'".\n')
-    end
+    conn:send('<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>Conectar a red WiFi</title></head>\n<body>\n<form action="/" method="POST">\n')
+    --if(newssid ~= "") then
+    --    conn:send('<br/>Tras reiniciar, conectar al SSID "' .. newssid ..'".\n')
+    --end
     conn:send('<br/><br/>\n\n<table>\n<tr><th>Selecciona el SSID de la red:</th></tr>\n')
     for ap,v in pairs(availableAPs) do
         conn:send('<tr><td><input type="button" onClick=\'document.getElementById("ssid").value = "' .. ap .. '"\' value="' .. ap .. '"/></td></tr>\n')
@@ -32,6 +33,7 @@ function sendAPlistPage(conn)
     conn:send('</table>\n\nSSID: <input type="text" id="ssid" name="ssid" value=""><br/>\nPassword: <input type="text" name="passwd" value=""><br/>\n\n')
     conn:send('<input type="submit" value="Submit"/>\n<input type="button" onClick="window.location.reload()" value="Refresh"/>\n<br/>\n<input type="submit" name="reboot" value="Conectar"/>\n')
     conn:send('</form>\n</body></html>')
+    conn:close()
 end
 
 function url_decode(str)
@@ -56,7 +58,7 @@ function incomingConnection(conn, payload)
             return
         end
         payload = string.sub(payload, plStart+1)
-        args={}
+        local args={}
         args.passwd=""
         -- parseamos todos las variables POST en la tabla args[]
         for k,v in string.gmatch(payload, "([^=&]*)=([^&]*)") do
@@ -78,9 +80,9 @@ function incomingConnection(conn, payload)
     end
 end
 
--- tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- actualizamos la lista de redes en base al refreshTimeout
--- forzamos la carga de la lista de redes la primera vez
-getAPs()
+getAPs() -- lanzamos la busqueda de redes antes de establecer el timer
+
+tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- actualizamos la lista de redes en base al refreshTimeout
 
 -- arrancamos servidor web y procesamos las peticiones
 srv=net.createServer(net.TCP)
