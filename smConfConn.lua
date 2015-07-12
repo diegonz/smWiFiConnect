@@ -23,7 +23,7 @@ end
 
 function sendAPlistPage(conn)
     print ("\n\nEnviando web de configuracion!") --DEBUG
-    local webPage = 'HTTP/1.1 200 OK\n<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>SmartWiFi</title></head>\n<body>\n<form action="/" method="POST">\n<br/>\nSelecciona tu WLAN:<br/><br/>\n'
+    local webPage = 'HTTP/1.1 200 OK\n<!DOCTYPE HTML>\n<html><head><meta content="text/html; charset=utf-8">\n<title>SmartWiFi</title></head>\n<body>\n<form action="/" method="POST">\n<br/>\nSelecciona tu WLAN:<br/><br/>\n'
     for ap,v in pairs(availableAPs) do
         local ssid, rssi, authmode, channel = string.match(v, "([^,]+),([^,]+),([^,]+),([^,]+)")
         webPage = webPage..'<input type="button" onClick=\'document.getElementById("ssid").value = "'..ssid..'"\' value="'..ssid..'"/><br/>Potencia: '..rssi..' Canal: '..channel..' Seguridad: '..authmode..' MAC: '..ap..'<br/>\n'
