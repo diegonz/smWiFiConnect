@@ -1,13 +1,15 @@
--- Establecemos modo AP
+print("\nsmConfConn iniciada correctamente") --DEBUG
+
+-- Establecemos configuracion para modo Station-AP
 dofile("smAPConfData.lua")
 
 -- Timeout de escaneo de redes disponibles
 refreshTimeout = 15
 availableAPs = {}
-newssid = ""
 
 function getAPs_callback(t)
     if(t==nil) then
+        availableAPs = nil
         return
     end
     availableAPs = nil
@@ -16,23 +18,20 @@ end
 
 function getAPs()
     print ("Buscando APs...") --DEBUG
-    wifi.sta.getap(getAPs_callback)
+    wifi.sta.getap(1, getAPs_callback)
 end
 
 function sendAPlistPage(conn)
     print ("\n\nEnviando web de configuracion!") --DEBUG
-    conn:send('HTTP/1.1 200 OK\n\n')
-    conn:send('<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>Conectar a red WiFi</title></head>\n<body>\n<form action="/" method="POST">\n')
-    --if(newssid ~= "") then
-    --    conn:send('<br/>Tras reiniciar, conectar al SSID "' .. newssid ..'".\n')
-    --end
-    conn:send('<br/><br/>\n\n<table>\n<tr><th>Selecciona el SSID de la red:</th></tr>\n')
+    local webPage = 'HTTP/1.1 200 OK\n<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>SmartWiFi</title></head>\n<body>\n<form action="/" method="POST">\n<br/>\nSelecciona tu WLAN:<br/><br/>\n'
     for ap,v in pairs(availableAPs) do
-        conn:send('<tr><td><input type="button" onClick=\'document.getElementById("ssid").value = "' .. ap .. '"\' value="' .. ap .. '"/></td></tr>\n')
+        local ssid, rssi, authmode, channel = string.match(v, "([^,]+),([^,]+),([^,]+),([^,]+)")
+        webPage = webPage..'<input type="button" onClick=\'document.getElementById("ssid").value = "'..ssid..'"\' value="'..ssid..'"/><br/>Potencia: '..rssi..' Canal: '..channel..' Seguridad: '..authmode..' MAC: '..ap..'<br/>\n'
     end
-    conn:send('</table>\n\nSSID: <input type="text" id="ssid" name="ssid" value=""><br/>\nPassword: <input type="text" name="passwd" value=""><br/>\n\n')
-    conn:send('<input type="submit" value="Submit"/>\n<input type="button" onClick="window.location.reload()" value="Refresh"/>\n<br/>\n<input type="submit" name="reboot" value="Conectar"/>\n')
-    conn:send('</form>\n</body></html>')
+    webPage = webPage..'SSID:<input type="text" id="ssid" name="ssid" value=""><br/>\nPassword:<input type="text" name="passwd" value=""><br/>\n'
+    webPage = webPage..'<input type="button" onClick="window.location.reload()" value="Refrescar"/>\n<input type="submit" name="reboot" value="Conectar"/>\n</form>\n</body>\n</html>'
+    conn:send(webPage)
+    conn:close()
 end
 
 function url_decode(str)
@@ -46,12 +45,12 @@ end
 function incomingConnection(conn, payload)
     print ("\n\nConexion HTTP recibida!") --DEBUG
     if (string.find(payload, "GET /favicon.ico HTTP/1.1") ~= nil) then
-        print("GET favicon solicitado") --DEBUG
+        print("\nGET favicon solicitado") --DEBUG
     elseif (string.find(payload, "GET / HTTP/1.1") ~= nil) then
-        print("GET recibido") --DEBUG
+        print("\nGET recibido") --DEBUG
         sendAPlistPage(conn)
     else
-        print("POST recibido") --DEBUG
+        print("\nPOST recibido") --DEBUG
         local blank, plStart = string.find(payload, "\r\n\r\n");
         if(plStart == nil) then
             return
@@ -66,11 +65,11 @@ function incomingConnection(conn, payload)
         if(args.ssid ~= nil and args.ssid ~= "") then
             print("Nueva SSID: " .. args.ssid) --DEBUG
             print("Password: " .. args.passwd) --DEBUG
-            newssid = args.ssid
             wifi.sta.config(args.ssid, args.passwd)
         end
         if(args.reboot ~= nil) then
             print("Reiniciando") --DEBUG
+            conn:send('HTTP/1.1 200 OK\n\n<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>'.. args.ssid ..'</title></head>\n<body>\n\n<br/>Conectando a: '.. args.ssid ..'\n</body></html>')
             conn:close()
             node.restart()
         end
@@ -79,7 +78,7 @@ function incomingConnection(conn, payload)
     end
 end
 
-getAPs() -- lanzamos la busqueda de redes antes de establecer el timer
+getAPs() -- lanzamos la busqueda de redes una vez antes de establecer el timer
 
 tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- actualizamos la lista de redes en base al refreshTimeout
 

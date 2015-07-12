@@ -1,20 +1,21 @@
-print("SmartApp iniciada correctamente") --DEBUG
-function incConnDimmer(conn)
-    print ("\n\nConexion HTTP recibida!") --DEBUG
-    conn:send('HTTP/1.1 200 OK\n\n')
-    conn:send('<!DOCTYPE HTML>\n<html>\n<head><meta content="text/html; charset=utf-8">\n<title>SMARTIDEA - SmartDimmer</title></head>\n<body>\n\n')
-    conn:send('\n<h1>SmartDimmer</h1>')
-    conn:send('\n\n\n<br />Conectado correctamente a la red WiFi')
-    local ip = wifi.sta.getip()
-    conn:send('<br />Direccion IP:' .. ip)
-    conn:send('\n</body></html>')
+print("\nsmDimmer iniciada correctamente") --DEBUG
+
+function incConn (smsk,stringBuffer)
+    if (stringBuffer=="HOLA\n") then
+        print(stringBuffer) --DEBUG
+        smsk:send("SMARTIDEA-"..string.sub(wifi.ap.getmac(),13).."\n")
+        print("SMARTIDEA-"..string.sub(wifi.ap.getmac(),13)) --DEBUG
+    elseif (stringBuffer=="OK\n") then
+        print(stringBuffer) --DEBUG
+    elseif (stringBuffer=="QUIT\r\n") then
+        smsk:close()
+        print("Conexion finalizada") --DEBUG
+    else
+        print(stringBuffer) --DEBUG
+    end
 end
 
-srv=net.createServer(net.TCP)
--- arrancamos servidor web y procesamos las peticiones
-srv:listen(80,function(sock)
-    sock:on("receive", incConnDimmer)
-    sock:on("sent", function(sock) 
-        sock:close()
-    end)
-end)
+srvHost="192.168.1.107"
+smsk=net.createConnection(net.TCP,0)
+smsk:on("receive", incConn)
+smsk:connect(2525, srvHost)

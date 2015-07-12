@@ -1,3 +1,5 @@
+print("\nsmAPConfConn iniciada correctamente") --DEBUG
+
 -- NodeMCU predefine las IPs en el rango 192.168.4.x , forzamos dicho rango por seguridad.
 local apNetConfig = {
     ip      = "192.168.4.1",

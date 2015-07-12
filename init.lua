@@ -1,7 +1,7 @@
 conTimeout = 10 -- timeout antes de cambiar a modo AP
 
 timeoutCount = 0
-
+srvHost="" -- IP del servidor
 netMode = 0 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
 
 function netStatus()
@@ -11,18 +11,18 @@ function netStatus()
         netMode=1
         local ip = wifi.sta.getip()
         print('Conectado correctamente - (status 5)') --DEBUG
-        print('\n\nDireccion IP: ' .. ip) --DEBUG
+        print('\nDireccion IP: ' .. ip) --DEBUG
         checkNetMode()
         return
     elseif(s==2 or s==3 or s==4) then -- conexion fallida, cambiamos a modo AP
         netMode=0
-        print('Fallo al conectar - (status 2/3/4)') --DEBUG
+        print('\nFallo al conectar - (status 2/3/4)') --DEBUG
         confConn()
         return
     end
     if(timeoutCount >= conTimeout) then -- agotado el tiempo cambiamos a modo AP
         netMode=0
-        print('Timeout al conectar!') --DEBUG
+        print('\nTimeout al conectar!') --DEBUG
         confConn()
         return
     end
@@ -31,17 +31,21 @@ end
 function checkNetMode()
     doCleanup()
     dofile('smNetMode.lua')
+    dofile('smDimmer.lua')
+    print("\nModo de red actual: "..netMode)
+    print("\n0 -> NoWLAN, 1 -> LAN, 2 -> WAN\n Reiniciando...")
+    node.restart()
 end
 
 function confConn()
-    print('Red WiFi no conectada/encontrada, lanzando modo AP ') --DEBUG
+    print('\nRed WiFi no conectada/encontrada, lanzando modo AP ') --DEBUG
     doCleanup()
     -- red no conectada/encontrada, cambiando a modo AP
     dofile('smConfConn.lua')
 end
 
 function doCleanup()
-    print("Sacando la basura...") --DEBUG
+    print("\nSacando la basura...") --DEBUG
     -- paramos el timer
     tmr.stop(0)
     -- reseteamos con nil las variables globales
@@ -55,7 +59,7 @@ function doCleanup()
     -- llamamos al recolector de basura
     collectgarbage()
     -- hacemos un delay (ms) para esperar a que se libere memoria
-    tmr.delay(3000)
+    --tmr.delay(3000)
 end
 
 -- Establecemos modo cliente e intentamos autoconectar
