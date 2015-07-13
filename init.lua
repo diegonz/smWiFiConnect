@@ -57,7 +57,7 @@ function doCleanup()
     confConn = nil
     doCleanup = nil
     -- llamamos al recolector de basura
-    collectgarbage()
+    collectgarbage("collect")
     -- hacemos un delay (ms) para esperar a que se libere memoria
     --tmr.delay(3000)
 end

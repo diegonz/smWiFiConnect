@@ -14,6 +14,7 @@ function getAPs_callback(t)
     end
     availableAPs = nil
     availableAPs = t
+    t = nil
 end
 
 function getAPs()
@@ -32,6 +33,7 @@ function sendAPlistPage(conn)
     webPage = webPage..'<input type="button" onClick="window.location.reload()" value="Refrescar"/>\n<input type="submit" name="reboot" value="Conectar"/>\n</form>\n</body>\n</html>'
     conn:send(webPage)
     conn:close()
+    webPage = nil
 end
 
 function url_decode(str)
