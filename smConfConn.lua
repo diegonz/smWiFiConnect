@@ -18,6 +18,7 @@ function getAPs_callback(t)
 end
 
 function getAPs()
+    print(collectgarbage("count")*1024.."KB") -- Mostramos la memoria usada en KB
     print ("Buscando APs...") --DEBUG
     wifi.sta.getap(1, getAPs_callback)
 end

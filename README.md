@@ -1,4 +1,4 @@
-# SmartWiFiConnect ESP-01 *(WiFi e Internet)*
+# SmartWiFiConnect ESP-01 *(LAN & WAN)*
 
 [TOC]
 
@@ -21,6 +21,23 @@
 3. Envío de la ID de *smartdevice* basada en la dirección MAC.
 4. Procesado de la respuesta de autenticación del servidor.
 5. Procesado de los distintos datos recibidos a través del socket.
+
+## Conexión a Cliente LAN
+### Protocolo ESP-01 <- Cliente LAN
+
+1. Escucha en el puerto 2525.
+2. Recepción del *payload* en formato **`DEVICE-ID COMMAND DATA`** *(separado por espacios*)
+	- El argumento `DEVICE-ID` será en formato **`SMARTIDEA-XX-YY`**, donde *XX* e *YY* son los cuatro últimos dígitos de la MAC.
+3. Envío de la respuesta por parte del smart device.
+	- El smart device responderá devolviendo los datos solicitados a través del socket finalizados por `\r\n`.
+	- Devolverá mensajes en caso de error en los argumentos. Si el error se produce en la comprobación del `DEVICE-ID`, el smart device devolverá el **valor correcto** de dicho argumento.
+
+#### Comandos disponibles para el *payload*
+- `print` - Escribe los datos recibidos en `DATA` por el puerto serie y los devuelve por el socket.
+- `restart` - Reinicia el smart device.
+- `getip` - Devuelve por el socket la dirección IP del smart device.
+- `getmac` - Devuelve por el socket la dirección MAC del smart device.
+- `getwlancfg` - Devuelve por el socket la configuración de la WLAN actual del smart device.
 
 
 [Smartidea ®](http://smartidea.es)

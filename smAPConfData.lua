@@ -13,3 +13,4 @@ wifi.ap.config(apSsidConfig)
 wifi.ap.setip(apNetConfig)
 print("AP con SSID: "..apSsidConfig.ssid.." establecido.") --DEBUG
 apNetConfig, apSsidConfig = nil, nil
+print(collectgarbage("count")*1024.."KB") -- Mostramos la memoria usada en KB
