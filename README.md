@@ -28,6 +28,7 @@
 1. Escucha en el puerto 2525.
 2. Recepción del *payload* en formato **`DEVICE-ID COMMAND DATA`** *(separado por espacios*)
 	- El argumento `DEVICE-ID` será en formato **`SMARTIDEA-XX-YY`**, donde *XX* e *YY* son los cuatro últimos dígitos de la MAC.
+	- Los argumentos aceptan caracteres alfanuméricos y el guión medio `-`.
 3. Envío de la respuesta por parte del smart device.
 	- El smart device responderá devolviendo los datos solicitados a través del socket finalizados por `\r\n`.
 	- Devolverá mensajes en caso de error en los argumentos. Si el error se produce en la comprobación del `DEVICE-ID`, el smart device devolverá el **valor correcto** de dicho argumento.
