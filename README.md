@@ -31,7 +31,7 @@
 	- Los argumentos aceptan caracteres alfanuméricos y el guión medio `-`.
 3. Envío de la respuesta por parte del smart device.
 	- El smart device responderá devolviendo los datos solicitados a través del socket finalizados por `\r\n`.
-	- Devolverá mensajes en caso de error en los argumentos. Si el error se produce en la comprobación del `DEVICE-ID`, el smart device devolverá el **valor correcto** de dicho argumento.
+	- Devolverá mensajes en caso de error en los argumentos. Si el error se produce en la comprobación del `DEVICE-ID`, pero si el parámetro pasado como `DEVICE-ID` es exactamente `getdeviceid` el smart device devolverá el `DEVICE-ID` *correcto*.
 
 #### Comandos disponibles para el *payload*
 - `print` - Escribe los datos recibidos en `DATA` por el puerto serie y los devuelve por el socket.

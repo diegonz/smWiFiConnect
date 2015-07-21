@@ -42,10 +42,12 @@ function incLanConn (smSrv,stringBuffer)
             smSrv:send("COMMAND ERROR\r\n")
             print("COMMAND ERROR\r\n") --DEBUG
         end
+    elseif (recData["deviceID"]=="getdeviceid")
+        smSrv:send("SMARTIDEA-"..string.sub(wifi.ap.getmac(),13).."\r\n")
+        print("DEVICE-ID enviado!\r\n") --DEBUG
     else
         smSrv:send("DEVICE-ID ERROR\r\n")
         print("DEVICE-ID ERROR\r\n") --DEBUG
-        smSrv:send("SMARTIDEA-"..string.sub(wifi.ap.getmac(),13).."\r\n")
     end
     print(collectgarbage("count")*1024.."KB") -- Mostramos la memoria usada en KB
 end
