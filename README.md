@@ -26,7 +26,7 @@
 ### Protocolo ESP-01 <- Cliente LAN
 
 1. Escucha en el puerto 2525.
-2. Recepción del *payload* en formato **`DEVICE-ID COMMAND DATA`** *(separado por espacios*)
+2. Recepción del *payload* en formato **`DEVICE-ID:COMMAND:DATA`** *(separado por dos puntos `:`)*
 	- El argumento `DEVICE-ID` será en formato **`SMARTIDEA-XX-YY`**, donde *XX* e *YY* son los cuatro últimos dígitos de la MAC.
 	- Los argumentos aceptan caracteres alfanuméricos y el guión medio `-`.
 3. Envío de la respuesta por parte del smart device.

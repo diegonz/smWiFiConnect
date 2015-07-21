@@ -18,28 +18,22 @@ end
 function incLanConn (smSrv,stringBuffer)
 
     local recData = {}
-    local itemCount = 0
-    for itemData in string.gmatch(stringBuffer, "%w%-+") do
-        table.insert(recData, itemData)
-        itemCount = itemCount + 1
-        if (itemCount==2) then break end
-    end
-    itemCount = nil
-    if (recData[1]=="SMARTIDEA-"..string.sub(wifi.ap.getmac(),13)) then
-        if (recData[2]=="print") then 
-            print(recData[3])
-            smSrv:send(recData[3].."\r\n")            
-        elseif (recData[2]=="restart") then
+    local _, _, recData["deviceID"], recData["smCommand"], recData["smData"] = string.find(stringBuffer, "([%w%-]+):([%w%-]+):([%w%-]+)")
+    if (recData["deviceID"]=="SMARTIDEA-"..string.sub(wifi.ap.getmac(),13)) then
+        if (recData["smCommand"]=="print") then 
+            print(recData["smData"])
+            smSrv:send(recData["smData"].."\r\n")            
+        elseif (recData["smCommand"]=="restart") then
             smSrv:send("Reiniciando\r\n")            
             print("Reiniciando...") --DEBUG
             node.restart()
-        elseif (recData[2]=="getip") then
+        elseif (recData["smCommand"]=="getip") then
             smSrv:send(wifi.sta.getip().."\r\n")
             print("Direccion IP enviada") --DEBUG
-        elseif (recData[2]=="getmac") then
+        elseif (recData["smCommand"]=="getmac") then
             smSrv:send(wifi.ap.getmac().."\r\n")
             print("Direccion MAC enviada") --DEBUG
-        elseif (recData[2]=="getwlancfg") then
+        elseif (recData["smCommand"]=="getwlancfg") then
             local ssid, password, bssid_set, bssid=wifi.sta.getconfig()
             smSrv:send("SSID: "..ssid.." PASSWD: "..password.." BSSID_SET: "..bssid_set.." BSSID: "..bssid.."\r\n")
             ssid, password, bssid_set, bssid = nil, nil, nil, nil
