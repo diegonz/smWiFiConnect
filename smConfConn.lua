@@ -1,10 +1,8 @@
 print("\nsmConfConn iniciada correctamente") --DEBUG
 
--- Establecemos configuracion para modo Station-AP
-dofile("smAPConfData.lua")
+dofile("smAPConfData.lua") -- Set Station-AP mode and create SMARTIDEA-XX-YY WLAN
 
--- Timeout de escaneo de redes disponibles
-refreshTimeout = 15
+refreshTimeout = 15 -- Timeout for AP scan
 availableAPs = {}
 
 function getAPs_callback(t)
@@ -18,7 +16,7 @@ function getAPs_callback(t)
 end
 
 function getAPs()
-    print(collectgarbage("count")*1024.."KB") -- Mostramos la memoria usada en KB
+    print(collectgarbage("count")*1024.."KB") -- Show used memory in KB
     print ("Buscando APs...") --DEBUG
     wifi.sta.getap(1, getAPs_callback)
 end
@@ -81,11 +79,11 @@ function incomingConnection(conn, payload)
     end
 end
 
-getAPs() -- lanzamos la busqueda de redes una vez antes de establecer el timer
+getAPs() -- Search for APs before setting timed search
 
-tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- actualizamos la lista de redes en base al refreshTimeout
+tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- Timed search based on refreshTimeout var
 
--- arrancamos servidor web y procesamos las peticiones
+-- Start Web Server and handle incomming requests
 srv=net.createServer(net.TCP)
 srv:listen(80,function(sock)
   sock:on("receive", incomingConnection)

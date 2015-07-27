@@ -26,13 +26,14 @@
 ### Protocolo ESP-01 <- Cliente LAN
 
 1. Escucha en el puerto 2525.
-2. Recepción del *payload* en formato **`JSON`** simple **`{deviceID:SMARTIDEA-XX-YY,smCommand:COMMAND,smData:DATA}`**	- El argumento `deviceID` será en formato **`SMARTIDEA-XX-YY`**, donde *XX* e *YY* son los cuatro últimos dígitos de la MAC.
-	- Los argumentos aceptan caracteres alfanuméricos y el guión medio `-`.
+2. Recepción del *payload (stringBuffer)* en formato `JSON` simple:
+	- El formato del *payload* **`{deviceID:SMARTIDEA-XX-YY,smCommand:COMMAND,smData:DATA}`**, sin importancia del orden de los parámetros.
+	- El argumento `deviceID` será en formato **`SMARTIDEA-XX-YY`**, donde *XX* e *YY* son los cuatro últimos dígitos de la MAC.
 3. Envío de la respuesta por parte del smart device.
-	- El smart device responderá devolviendo los datos solicitados a través del socket finalizados por `\r\n`.
-	- Devolverá mensajes en caso de error en los argumentos. Si el error se produce en la comprobación del `DEVICE-ID`, pero si el parámetro pasado como `DEVICE-ID` es exactamente `getdeviceid` el smart device devolverá el `DEVICE-ID` *correcto*.
+	- El smart device responderá devolviendo los datos solicitados a través del socket en un *string* en formato `JSON`.
+	- En caso de error, devolverá un mensaje informativo en el campo `smData` y el comando solicitado en `smCommand`. Si el error se produce en la comprobación del `DEVICE-ID`, pero si el parámetro pasado como `DEVICE-ID` es exactamente `getdeviceid` el smart device devolverá el `DEVICE-ID` *correcto*.
 
-#### Comandos disponibles para el *payload*
+#### Comandos disponibles para el *payload (stringBuffer)* 
 - `print` - Escribe los datos recibidos en `DATA` por el puerto serie y los devuelve por el socket.
 - `restart` - Reinicia el smart device.
 - `getip` - Devuelve por el socket la dirección IP del smart device.

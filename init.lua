@@ -1,27 +1,27 @@
-conTimeout = 10 -- timeout antes de cambiar a modo AP
+conTimeout = 10 -- Timeout before changing to StationAP mode
 
 timeoutCount = 0
-srvHost="" -- IP del servidor WAN
+srvHost="" -- WAN's Server IP
 netMode = 0 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
 
 function netStatus()
-    print(collectgarbage("count")*1024.."KB") -- Mostramos la memoria usada en KB
+    print(collectgarbage("count")*1024.."KB") -- Show used memory in KB
     timeoutCount = timeoutCount + 1
     local s=wifi.sta.status()
-    if(s==5) then -- conectado, lanzamos la smApp
+    if(s==5) then -- Connected, launching smApp
         netMode=1
         local ip = wifi.sta.getip()
         print('Conectado correctamente - (status 5)') --DEBUG
         print('\nDireccion IP: ' .. ip) --DEBUG
         doTask()
         return
-    elseif(s==2 or s==3 or s==4) then -- conexion fallida, cambiamos a modo AP
+    elseif(s==2 or s==3 or s==4) then -- Connection error, switching to StationAP mode
         netMode=0
         print('\nFallo al conectar - (status 2/3/4)') --DEBUG
         doConfConn()
         return
     end
-    if(timeoutCount >= conTimeout) then -- agotado el tiempo cambiamos a modo AP
+    if(timeoutCount >= conTimeout) then -- Timed out, switching to StationAP mode
         netMode=0
         print('\nTimeout al conectar!') --DEBUG
         doConfConn()
@@ -30,8 +30,8 @@ function netStatus()
 end
 
 function doTask()
-    -- Comprobamos el tipo de conectividad
-    local wanStatus = require("smNetMode")
+    -- Check for WAN status
+    local wanStatus = require "smNetMode"
     wanStatus.checkWAN()
     wanStatus = nil
     doCleanup()
@@ -44,30 +44,31 @@ end
 function doConfConn()
     print('\nRed WiFi no conectada/encontrada, lanzando modo AP ') --DEBUG
     doCleanup()
-    -- red no conectada/encontrada, cambiando a modo AP
+
+    -- Can't connect/find network, switching to StationAP mode
     dofile('smConfConn.lua')
 end
 
 function doCleanup()
     print("\nSacando la basura...") --DEBUG
-    -- paramos el timer
+    -- stop timers
     tmr.stop(0)
-    -- reseteamos con nil las variables globales
+    -- reset global variables
     conTimeout = nil
     timeoutCount = nil
-    -- reseteamos con nil las funciones definidas
+    -- reset useless functions
     netStatus = nil
     doTask = nil
     doConfConn = nil
     doCleanup = nil
-    -- llamamos al recolector de basura
+    -- call to garbage collector
     collectgarbage("collect")
-    print(collectgarbage("count")*1024.."KB") -- Mostramos la memoria usada en KB
+    print(collectgarbage("count")*1024.."KB") -- Show used memory in KB
 end
 
--- Establecemos modo cliente e intentamos autoconectar
+-- Set Station mode and try to auto-connect
 wifi.setmode(wifi.STATION)
 wifi.sta.autoconnect(1)
 
--- Comprobamos el estado de la red cada segundo
+-- Chech network status every second
 tmr.alarm(0, 1000, 1, netStatus)

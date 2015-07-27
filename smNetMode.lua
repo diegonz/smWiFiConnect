@@ -1,12 +1,14 @@
-print("\nsmNetMode iniciada correctamente") --DEBUG
+print("\nsmNetMode llamada correctamente") --DEBUG
 
-function checkWAN()
+local smNetMode = {}
+
+function smNetMode.checkWAN()
     local oldNetMode = netMode
     local wan=net.createConnection(net.TCP, 0)
     wan:dns("www.smartidea.es",function(conn,ip)
-        print(ip) -- IP del servidor WAN
+        print(ip) -- WAN's Server IP
         if (ip~=nil) then
-            srvHost=ip -- IP del servidor WAN
+            srvHost=ip -- WAN's Server IP
             netMode = 2 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
         else
             netMode = 1 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
@@ -15,7 +17,10 @@ function checkWAN()
         --srvHost="192.168.1.107" -- HARDCODE SERVER IP
     end)
     wan = nil
-    print(collectgarbage("count")*1024.."KB") -- Mostramos la memoria usada en KB
-    -- Si ha cambiado el tipo de conectividad reiniciamos para empezar de 0
-    if (oldNetMode~=netMode and oldNetMode~=0) then node.restart() end
+    print(collectgarbage("count")*1024.."KB") -- Show used memory in KB
+
+    -- If netMode has changed (not first try) or no WLAN restart system.
+    if ((oldNetMode~=netMode and oldNetMode~=0) or (netMode==0)) then node.restart() end
 end
+
+return smNetMode
