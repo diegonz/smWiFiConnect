@@ -5,9 +5,9 @@
 ## Conexión a WiFi
 ### Protocolo de configuración inalámbrica
 1. Comprobación periódica *(1 seg)* del estado de la *auto-conexión* *("init.lua")*.
-2. En caso de timeout *(30 seg)* o fallo en la conexión *(error, pwd erróneo, wifi no encontrado...)* arrancamos el **modo AP** .
-	1. Arrancamos el **modo AP** *("smConfConn.lua")*.
-	2. Configuramos los ajustes del **modo AP** *("smAPConfData.lua")*.
+2. En caso de timeout *(30 seg)* o fallo en la conexión *(error, pwd erróneo, wifi no encontrado...)* arrancamos el **modo StationAP** .
+	1. Arrancamos el **modo StationAP** *("smConfConn.lua")*.
+	2. Configuramos los ajustes del **modo StationAP** *("smAPConfData.lua")*.
 	3. Escaneamos las redes disponibles y las almacenamos.
 	4. En la IP *192.168.4.1* devolvemos una página web con las redes disponibles.
 	5. Conectamos con la red indicada en la página web.
@@ -34,11 +34,12 @@
 	- En caso de error, devolverá un mensaje informativo en el campo `smData` y el comando solicitado en `smCommand`. Si el error se produce en la comprobación del `DEVICE-ID`, pero si el parámetro pasado como `DEVICE-ID` es exactamente `getdeviceid` el smart device devolverá el `DEVICE-ID` *correcto*.
 
 #### Comandos disponibles para el *payload (stringBuffer)* 
-- `print` - Escribe los datos recibidos en `DATA` por el puerto serie y los devuelve por el socket.
-- `restart` - Reinicia el smart device.
+La *API REST* del smart device soporta los siguientes comandos *(smCommand)*:
+- `print` - Escribe los datos recibidos en `DATA` por el puerto serie y a su vez los devuelve por el socket.
+- `restart` - Reinicia el smart device y devuelve confirmación.
 - `getip` - Devuelve por el socket la dirección IP del smart device.
 - `getmac` - Devuelve por el socket la dirección MAC del smart device.
-- `getwlancfg` - Devuelve por el socket la configuración de la WLAN actual del smart device.
+- `getwlancfg` - Devuelve por el socket la configuración de la WLAN actual del smart device *(SSID, PASSWORD, BSSID_SET y BSSID)*.
 
 
 [Smartidea ®](http://smartidea.es)

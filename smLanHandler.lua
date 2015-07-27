@@ -30,7 +30,7 @@ function lanHandler.incLanConn (smSrv,stringBuffer)
             print("MAC address sent") --DEBUG
         elseif (recData["smCommand"]=="getwlancfg") then
             respData["smCommand"] = recData["smCommand"]
-            respData["smData"]["ssid"], respData["smData"]["password"], respData["smData"]["ssid"], respData["smData"]["bssid_set"],respData["smData"]["bssid"] = wifi.sta.getconfig()
+            respData["smData"]["ssid"], respData["smData"]["password"], respData["smData"]["bssid_set"],respData["smData"]["bssid"] = wifi.sta.getconfig()
             smSrv:send(cjson.encode(respData))
             print("WLAN config sent") --DEBUG
         else
