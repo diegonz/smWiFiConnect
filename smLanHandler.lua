@@ -1,20 +1,23 @@
 local lanHandler = {}
 
-function lanHandler.incLanConn (smSrv,stringBuffer)
+function lanHandler.incLanData (smSrv,stringBuffer)
 
     local recData, respData = cjson.decode(stringBuffer), {}
     respData["deviceID"] = "SMARTIDEA-"..string.sub(wifi.ap.getmac(),13)
     if (recData["deviceID"]=="SMARTIDEA-"..string.sub(wifi.ap.getmac(),13)) then
-        if (recData["smCommand"]=="print") then
-            if (recData["smData"]~=nil) then
-                print("Received DATA: "..recData["smData"]) -- DEBUG
-                respData["smCommand"], respData["smData"] = recData["smCommand"], recData["smData"]
-                smSrv:send(cjson.encode(respData))
-            else
-                respData["smCommand"], respData["smData"] = recData["smCommand"], "DATA ERROR"
-                smSrv:send(cjson.encode(respData))
-                print("Error, no data not received!") -- DEBUG
-            end
+        if (recData["smCommand"]=="send") then
+            uart.write(0,string.char(tonumber(respData["smData"]))) -- SEND DATA (CHAR OF BYTE VALUE) TO UART - *ACCEPTS ONLY ONE COMMAND
+            --uart.write(0,string.byte(respData["smData"])) -- SEND DATA (BYTE VALUE OF CHAR) TO UART  *ACCEPTS ONLY ONE COMMAND*
+        elseif (recData["smCommand"]=="print") then
+          if (recData["smData"]~=nil) then
+              print("Received DATA: "..recData["smData"]) -- DEBUG
+              respData["smCommand"], respData["smData"] = recData["smCommand"], recData["smData"]
+              smSrv:send(cjson.encode(respData))
+          else
+              respData["smCommand"], respData["smData"] = recData["smCommand"], "DATA ERROR"
+              smSrv:send(cjson.encode(respData))
+              print("Error, no data not received!") -- DEBUG
+          end
         elseif (recData["smCommand"]=="restart") then
             respData["smCommand"], respData["smData"] = recData["smCommand"], "Rebooting..."
             smSrv:send(cjson.encode(respData))
