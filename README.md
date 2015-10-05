@@ -1,7 +1,7 @@
-# SmartWiFiConnect ESP-01 *(LAN, WAN & UART)*
+# SmartWiFiConnect ESP-01 *(LAN, WAN & UART)* PENDIENTE DE REVISAR/ACTUALIZAR _AUTH_ Y _JSON_
 
 [TOC]
-
+## PENDIENTE DE REVISAR/ACTUALIZAR _AUTH_ Y _JSON_
 ## Conexión a WiFi
 ### Protocolo de configuración inalámbrica
 1. Comprobación periódica *(1 seg)* del estado de la *auto-conexión* *("init.lua")*.
@@ -21,7 +21,40 @@
 2. Procesado del saludo de servidor.
 3. Envío de la ID de *smartdevice* basada en la dirección MAC.
 4. Procesado de la respuesta de autenticación del servidor.
-5. Procesado de los distintos datos recibidos a través del socket.
+5. Procesado de los distintos datos recibidos a través del socket en formato _JSON_.
+
+##### Ejemplo de _Auth_ y uso autenticado
+Los devices y clientes interactuan intercambiando objetos _JSON_, a continuacion vemos ejemplos basicos de _Auth_ y envio de _info_ u _ordenes_.
+- Ejemplo de _Auth_ de device
+    ```
+    { "action" : "DEVICE_AUTH", "id" : "123456" }
+    { "action" : "DEVICE_AUTH", "id" : "345987" }
+    ```
+- Ejemplo de _Auth_ de cliente
+    ```
+    { "action" : "CLIENT_AUTH", "id" : "256956998", "account" : "myaccount1@smartidea.es", "password" : "mypassword1" }
+    { "action" : "CLIENT_AUTH", "id" : "256456328", "account" : "myaccount2@smartidea.es", "password" : "mypassword2" }
+    { "action" : "CLIENT_AUTH", "id" : "232456998", "account" : "myaccount3@smartidea.es", "password" : "mypassword3" }
+
+    ```
+- Ejemplo de envio de _data_ y _comandos_
+    ```
+    { "id" : "123456", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "345987", "on" : false, "dimm" : 10 , "timmer" : true }
+    { "id" : "123457", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "123456", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "345987", "on" : false, "dimm" : 10 , "timmer" : true }
+    { "id" : "123457", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "123456", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "345987", "on" : false, "dimm" : 10 , "timmer" : true }
+    { "id" : "123457", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "123457", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "123456", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "345987", "on" : false, "dimm" : 10 , "timmer" : true }
+    { "id" : "123457", "on" : true, "dimm" : 35 , "timmer" : false }
+    { "id" : "123456", "on" : true, "dimm" : 35 , "timmer" : false }
+    ```
+
 
 ### Conexión a Cliente LAN
 #### Protocolo ESP-01 <- Cliente LAN
