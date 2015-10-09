@@ -1,11 +1,11 @@
 conTimeout = 10 -- Timeout before changing to StationAP mode
 
 timeoutCount = 0
-srvHost="" -- WAN's Server IP
+srvHost = "" -- WAN's Server IP
 netMode = 0 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
 
 function netStatus()
-    print(collectgarbage("count")*1024.."KB") -- Show used memory in KB
+    print(collectgarbage("count") * 1024 .. "KB") -- Show used memory in KB
     timeoutCount = timeoutCount + 1
     local s=wifi.sta.status()
     if(s==5) then -- Connected, launching smApp
@@ -63,7 +63,7 @@ function doCleanup()
     doCleanup = nil
     -- call to garbage collector
     collectgarbage("collect")
-    print(collectgarbage("count")*1024.."KB") -- Show used memory in KB
+    print(collectgarbage("count") * 1024 .. "KB") -- Show used memory in KB
 end
 
 -- Set Station mode and try to auto-connect
