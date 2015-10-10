@@ -15,7 +15,7 @@ function netStatus()
         print('\nDireccion IP: ' .. ip) --DEBUG
         doTask()
         return
-    elseif(s==2 or s==3 or s==4) then -- Connection error, switching to StationAP mode
+    elseif(s == 2 or s == 3 or s == 4) then -- Connection error, switching to StationAP mode
         netMode=0
         print('\nFallo al conectar - (status 2/3/4)') --DEBUG
         doConfConn()

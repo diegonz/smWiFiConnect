@@ -1,18 +1,16 @@
-print("\nsmNetMode llamada correctamente") --DEBUG
-
 local smNetMode = {}
 
-function smNetMode.checkWAN(notLoggedIn)
+function smNetMode.checkWAN()
+    print("\nsmNetMode llamada correctamente") --DEBUG
     local oldNetMode = netMode
     local wan=net.createConnection(net.TCP, 0)
-    wan:dns("testingserver.smartidea.es",function(conn,ip)
+    wan:dns("testingserver.smartidea.es",function(conn, ip)
         print(ip) -- WAN's Server IP
         if (ip~=nil) then
-            srvHost=ip -- WAN's Server IP
+            srvHost = ip -- WAN's Server IP
             netMode = 2 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
         else
             netMode = 1 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
-            notLoggedIn = true -- If lost WAN access set notLoggedIn
         end
         print("\nIP servidor :"..srvHost)
     end)

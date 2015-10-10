@@ -6,7 +6,7 @@ refreshTimeout = 15 -- Timeout for AP scan
 availableAPs = {}
 
 function getAPs_callback(t)
-    if(t==nil) then
+    if(t == nil) then
         availableAPs = nil
         return
     end
@@ -16,7 +16,7 @@ function getAPs_callback(t)
 end
 
 function getAPs()
-    print(collectgarbage("count")*1024.."KB") -- Show used memory in KB
+    print(collectgarbage("count")* 1024 .. "KB") -- Show used memory in KB
     print ("Buscando APs...") --DEBUG
     wifi.sta.getap(1, getAPs_callback)
 end
@@ -53,7 +53,7 @@ function incomingConnection(conn, payload)
     else
         print("\nPOST recibido") --DEBUG
         local blank, plStart = string.find(payload, "\r\n\r\n");
-        if(plStart == nil) then
+        if(plStart  ==  nil) then
             return
         end
         payload = string.sub(payload, plStart+1)
@@ -81,7 +81,7 @@ end
 
 getAPs() -- Search for APs before setting timed search
 
-tmr.alarm(0, refreshTimeout*1000, 1, getAPs) -- Timed search based on refreshTimeout var
+tmr.alarm(0, refreshTimeout * 1000, 1, getAPs) -- Timed search based on refreshTimeout var
 
 -- Start Web Server and handle incomming requests
 srv=net.createServer(net.TCP)
