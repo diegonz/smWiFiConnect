@@ -11,7 +11,13 @@ function wanHandler.incWanData (smSrv, stringBuffer)
     --end
 
     print(stringBuffer) -- Prints received data
-    --smSrv:send(stringBuffer)-- SENDS DATA BACK TO THE SERVER
+
+    -- SENDS DATA BACK TO THE SERVER
+    --smSrv:send(stringBuffer,
+    --    function()
+    --        smSrv:send("\n")
+    --    end
+    --)
 end
 
 return wanHandler
