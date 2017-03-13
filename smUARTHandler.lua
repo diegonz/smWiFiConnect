@@ -2,7 +2,7 @@ local UARTHandler = {}
 
 function UARTHandler.incUartData (data)
     local respData = {}
-    respData["deviceID"] = "SMARTIDEA-"..string.sub(wifi.ap.getmac(), 13)
+    respData["deviceID"] = "SMART-"..string.sub(wifi.ap.getmac(), 13)
     respData["smCommand"] = "picdata"
     if (data == "e") then -- on = 101
       respData["smData"] = 101
