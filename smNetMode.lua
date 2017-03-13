@@ -1,10 +1,10 @@
 local smNetMode = {}
 
 function smNetMode.checkWAN()
-    print("\nsmNetMode llamada correctamente") --DEBUG
+    print("\nsmNetMode successfully called") --DEBUG
     local oldNetMode = netMode
     local wan=net.createConnection(net.TCP, 0)
-    wan:dns("testingserver.smartidea.es",function(conn, ip)
+    wan:dns("testingserver.myserver.es",function(conn, ip)
         print(ip) -- WAN's Server IP
         if (ip~=nil) then
             srvHost = ip -- WAN's Server IP
@@ -12,7 +12,7 @@ function smNetMode.checkWAN()
         else
             netMode = 1 -- 0 -> NoWLAN, 1 -> LAN, 2 -> WAN
         end
-        print("\nIP servidor :"..srvHost)
+        print("\nServer IP :"..srvHost)
     end)
     wan = nil
     print(collectgarbage("count") * 1024 .. "KB") -- Show used memory in KB
