@@ -3,8 +3,8 @@ local lanHandler = {}
 function lanHandler.incLanData (smSrv,stringBuffer)
 
     local recData, respData = cjson.decode(stringBuffer), {}
-    respData["deviceID"] = "SMARTIDEA-"..string.sub(wifi.ap.getmac(),13)
-    if (recData["deviceID"] == "SMARTIDEA-"..string.sub(wifi.ap.getmac(),13)) then
+    respData["deviceID"] = "SMART-"..string.sub(wifi.ap.getmac(),13)
+    if (recData["deviceID"] == "SMART-"..string.sub(wifi.ap.getmac(),13)) then
         if (recData["smCommand"] == "send") then
             uart.write(0,string.char(tonumber(respData["smData"]))) -- SEND DATA (CHAR OF BYTE VALUE) TO UART - *ACCEPTS ONLY ONE COMMAND
             --uart.write(0,string.byte(respData["smData"])) -- SEND DATA (BYTE VALUE OF CHAR) TO UART  *ACCEPTS ONLY ONE COMMAND*
