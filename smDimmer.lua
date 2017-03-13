@@ -1,4 +1,4 @@
-print("\nsmDimmer iniciada correctamente") --DEBUG
+print("\nsmDimmer successfully started") --DEBUG
 
 local srvPort = 8992
 
