@@ -1,16 +1,16 @@
-print("\nsmAPConfConn iniciada correctamente") --DEBUG
+print("\nsmAPConfConn successfully started") --DEBUG
 
--- NodeMCU predefine las IPs en el rango 192.168.4.x , forzamos dicho rango por seguridad.
+-- NodeMCU predefines IPs at 192.168.4.x range anyway.
 local apNetConfig = {
     ip      = "192.168.4.1",
     netmask = "255.255.255.0",
     gateway = "192.168.4.1"
 }
 wifi.setmode(wifi.STATIONAP)
--- El SSID del AP SMARTIDEA-XX-YY, "-XX-YY" son los ultimos cuatro elementos de la MAC
-local apSsidConfig.ssid = "SMARTIDEA-"..string.sub(wifi.ap.getmac(), 13)
+-- SSID of AP SMART-XX-YY, "-XX-YY" are the last four elements of the MAC address.
+local apSsidConfig.ssid = "SMART-"..string.sub(wifi.ap.getmac(), 13)
 wifi.ap.config(apSsidConfig)
 wifi.ap.setip(apNetConfig)
-print("AP con SSID: "..apSsidConfig.ssid.." establecido.") --DEBUG
+print("AP with SSID: "..apSsidConfig.ssid.." established.") --DEBUG
 apNetConfig, apSsidConfig = nil, nil
-print(collectgarbage("count") * 1024 .. "KB") -- Mostramos la memoria usada en KB
+print(collectgarbage("count") * 1024 .. "KB") -- Show used memory in KB
