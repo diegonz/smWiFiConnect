@@ -11,19 +11,19 @@ function netStatus()
     if(s==5) then -- Connected, launching smApp
         netMode=1
         local ip = wifi.sta.getip()
-        print('Conectado correctamente - (status 5)') --DEBUG
-        print('\nDireccion IP: ' .. ip) --DEBUG
+        print('Successfully connected - (status 5)') --DEBUG
+        print('\nIP Address: ' .. ip) --DEBUG
         doTask()
         return
     elseif(s == 2 or s == 3 or s == 4) then -- Connection error, switching to StationAP mode
         netMode=0
-        print('\nFallo al conectar - (status 2/3/4)') --DEBUG
+        print('\nFailed to connect - (status 2/3/4)') --DEBUG
         doConfConn()
         return
     end
     if(timeoutCount >= conTimeout) then -- Timed out, switching to StationAP mode
         netMode=0
-        print('\nTimeout al conectar!') --DEBUG
+        print('\nConnection timeout!') --DEBUG
         doConfConn()
         return
     end
@@ -36,13 +36,13 @@ function doTask()
     wanStatus = nil
     doCleanup()
     dofile('smDimmer.lua')
-    print("\nModo de red actual: "..netMode)
-    print("\n0 -> NoWLAN, 1 -> LAN, 2 -> WAN\n Reiniciando...")
+    print("\nCurrent net mode: "..netMode)
+    print("\n0 -> NoWLAN, 1 -> LAN, 2 -> WAN\n Rebooting...")
     node.restart()
 end
 
 function doConfConn()
-    print('\nRed WiFi no conectada/encontrada, lanzando modo AP ') --DEBUG
+    print('\nWiFi network not reachable, starting AP mode') --DEBUG
     doCleanup()
 
     -- Can't connect/find network, switching to StationAP mode
@@ -50,7 +50,7 @@ function doConfConn()
 end
 
 function doCleanup()
-    print("\nSacando la basura...") --DEBUG
+    print("\nTaking out the trash...") --DEBUG
     -- stop timers
     tmr.stop(0)
     -- reset global variables
